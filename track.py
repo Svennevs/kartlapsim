@@ -29,6 +29,7 @@ class Track:
         vcol    = [i for i,s in enumerate(chans) if "GPS_Speed" in s]
         dpsicol = [i for i,s in enumerate(chans) if "GPS_Gyro" in s]
         inclcol = [i for i,s in enumerate(chans) if "GPS_Slope" in s]
+        rpmcol  = [i for i,s in enumerate(chans) if "RPM" in s]
         
         self.s      = datarray[:,scol]*1000
         self.v      = datarray[:,vcol]/3.6
@@ -36,8 +37,10 @@ class Track:
         self.curv   = dpsi/self.v
         self.ds     = np.gradient(self.s,axis=0)
         self.axIncl = np.sin( np.radians(-datarray[:,inclcol]))*settings.g
+        self.rpm    = datarray[:,rpmcol]
+        #self.azIncl = self.v**2*np.gradient(np.sin(np.radians(datarray[:,inclcol])),axis=0)
         
-        plt.plot(self.s,self.curv)
-        plt.show()
+        #plt.plot(self.s,self.curv)
+        #plt.show()
         
         
