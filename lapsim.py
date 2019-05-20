@@ -91,14 +91,14 @@ class Lapsim:
         self.x.fxdrag  = self.calcDrag()
         self.x.vow = v*(1+0.5*self.kart.T*abs(self.track.curv[idx])) #outside wheel 
                
-        #solve engine force (unknown is RPM because of slip)
-        nmin = self.x.v/self.kart.rTrans/self.x.rw
-        nmax = self.x.v*(1+self.kart.sxmax)/self.kart.rTrans/self.x.rw
-        self.x.nEng = brentq( self.errorNEng ,nmin,nmax) 
-        #nEng     =  v/self.rTrans/self.rw #assume no slip
+        #solve PT force (unknown is RPM because of slip)
+        nmin = self.x.v/self.x.rw
+        nmax = self.x.vow*(1+self.kart.sxmax)/self.x.rw
+        self.x.nAxle = brentq( self.errornAxle ,nmin,nmax) 
+        #self.x.nAxle =  v/self.x.rw #assume no slip
         
-        fxengine = self.calcFxEng(self.x.nEng)
-        ax = (np.minimum(self.x.fxtyres,fxengine) - self.x.fxdrag)/self.kart.m #add various drag components
+        self.x.fxPT = self.calcFxPT(self.x.nAxle)
+        ax = (np.minimum(self.x.fxtyres,self.x.fxPT) - self.x.fxdrag)/self.kart.m #add various drag components
         
         statevars = vars(self.x)
         np.put(self.xvec, range(len(statevars)) , list(statevars.values()) )
@@ -123,15 +123,15 @@ class Lapsim:
         return fxdragslip + fxdragroll + fxdragaero
     
     
-    def errorNEng(self,nEng):
-        fx      = self.calcFxEng(nEng) #first solve what would fx be at this rpm?
+    def errornAxle(self,nAxle):
+        fx      = self.calcFxPT(nAxle) #first solve what would fx be at this rpm?
         sx      = self.calcSxTyres(fx)  #then solve what would slip be at this fx        
-        nEngsol = self.x.vow*(1+sx)/self.kart.rTrans/self.x.rw #corresponding nEng
-        return (nEng - nEngsol)
+        nAxlesol = self.x.vow*(1+sx)/self.x.rw #corresponding nAxle
+        return (nAxle - nAxlesol)
     
-    def calcFxEng(self,nEng):    
-        T = np.interp(nEng,self.kart.nEngcurv,self.kart.Tcurve)
-        return T/self.kart.rTrans/self.x.rw #return fxengine
+    def calcFxPT(self,nAxle):    
+        T = np.interp(nAxle,self.kart.nAxlePT,self.kart.TAxlePT)
+        return T/self.x.rw #return fxPT
     
     def calcSxTyres(self,fx): 
         #basic inverse tyre model (TmEasy combined, sin(quad slip arg))
@@ -165,10 +165,12 @@ class State:
         self.ay = None
         self.rw = None   
         self.fac = None
-        self.fxtyres = None 
+        self.fxtyres = None
+        self.fxPT = None
         self.fxdrag = None
         self.vow = None
-        self.nEng = None
+        self.nAxle = None
+        
         
         #if lsobj:
             #self.ls=lsobj #couple to lapsim obj

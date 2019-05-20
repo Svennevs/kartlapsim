@@ -1,54 +1,71 @@
 import matplotlib.pyplot as plt
 import numpy as np
+try:
+    import cPickle as pickle
+except ModuleNotFoundError:
+    import pickle
 
-
+from lapsim_utils import *
 from track import Track
 from lapsim import Lapsim
 from kart import Kart
 
+#kart = Kart('TorqueCurve_luchtgekoeld_testbank.csv')
+#kart = Kart('TorqueCurve_KZ.csv')
+#save_object(kart, 'mini.pickle')
+kart = load_object('KZ.pickle')
+#kart = load_object('mini.pickle')
 
-mini = Kart('TorqueCurve_luchtgekoeld_testbank.csv')
-#mini.plotGGV()
 mariembourg = Track('mariembourg_mini.csv')
+mbkz = Track('mariembourg_kz.csv') #lap for comparison (kz)
 
-
-ls1 = Lapsim(mini,mariembourg)
+ls1 = Lapsim(kart,mariembourg)
 ls1.calcapexes()
 ls1.calcfwdbwd()
 
+s  = shiftdist(mbkz.s,260,13.1/14)
+
+throttle = np.maximum(np.minimum(ls1.xsol[:,5]/ls1.xsol[:,6],1),0)
 
 plt.figure()
 #plt.plot(ls1.track.s[ls1.idxApex],ls1.vApex*3.6, 'ro',label='apex')
 #plt.plot(ls1.track.s,ls1.vApexSol*3.6,label='apex solution')
-plt.plot(ls1.track.s,ls1.track.v*3.6,label='Data Rene')
-plt.plot(ls1.track.s,ls1.vqss*3.6,label='simulatie, 10/71')
-plt.ylim((0, 120))
+#plt.plot(ls1.track.s,ls1.track.v*3.6,label='Data Rene')
+plt.plot(s,mbkz.v*3.6*13.1/14,label='Data Sven')
+plt.plot(ls1.track.s,ls1.vqss*3.6,label='sim')
+plt.plot(ls1.track.s,throttle*40, marker='.',markersize=2,label='throttle sim')
+plt.ylim((0, 150))
 plt.ylabel("speed [kph]")
 plt.xlabel("distance [m]")
 plt.legend(loc='lower right')
 plt.show()
 
+print(ls1.laptime)
+
 #laptime    = np.sum(mariembourg.ds / mariembourg.v)
 
+#Final drive ratio scan for mini starts here
+
 #print(laptime)
-transoptions = 10/np.array([65,66,67,68,69,70,71,72,73])
+transoptions = np.array([65,66,67,68,69,70,71,72,73])/10
 optsplt = ['10/65','10/66','10/67','10/68','10/69','10/70','10/71','10/72','10/73']
 
 lt=np.zeros_like(transoptions)
 ts=np.zeros_like(lt)
 maxrpm=np.zeros_like(lt)
-minrpm  =np.zeros_like(lt)
+minrpm=np.zeros_like(lt)
    
 plt.figure()
 for i,tr in enumerate(transoptions):
-    mini = Kart('TorqueCurve_luchtgekoeld_testbank.csv')
-    mini.rTrans = tr
+    mini = load_object('mini.pickle')#Kart('TorqueCurve_luchtgekoeld_testbank.csv')
+    mini.rFinal = tr
+    mini.readTorqueCurve('TorqueCurve_luchtgekoeld_testbank.csv')
     ls1 = Lapsim(mini,mariembourg)
     ls1.calcapexes()
     ls1.calcfwdbwd()
     lt[i]=ls1.laptime
     ts[i]=max(ls1.vqss)
-    maxrpm[i]=max( ls1.xsol[:,8]*60/(2*np.pi) )
+    maxrpm[i]=max( ls1.xsol[:,9]*60/(2*np.pi) )
     plt.plot(ls1.track.s,ls1.vqss*3.6,label=optsplt[i])
     
 plt.ylim((30, 120))
