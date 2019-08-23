@@ -10,18 +10,141 @@ from track import Track
 from lapsim import Lapsim
 from kart import Kart
 
-#kart = Kart('TorqueCurve_luchtgekoeld_testbank.csv')
+kart = Kart('TorqueCurve_luchtgekoeld_testbank.csv')
 #kart = Kart('TorqueCurve_KZ.csv')
 #save_object(kart, 'mini.pickle')
-kart = load_object('KZ.pickle')
+#kart = load_object('KZ.pickle')
 #kart = load_object('mini.pickle')
 
 mariembourg = Track('mariembourg_mini.csv')
+
+
+#X = np.array([10,0,0])
+#U = np.array([0.1,10])
+from lapsim import Lapsim
+ls1 = Lapsim(kart,mariembourg)
+ls1.EoM(X,U)
+
+#euler experiment
+
+#initial cond
+X = np.array([12,0,0,0.2,0.05])
+#U = np.array([0.5,10])
+t = np.linspace(0,1,100)
+#ls1.fwdSim(X0,U,t)
+
+Xh = np.empty((0,5))
+Xd = np.empty((0,3))
+for T in t:       
+    Xdot = ls1.EoM(X)
+    X = X + 0.01* np.append(Xdot,[0,0])
+    
+    #U[1] = X[0]
+    Xh = np.vstack( (Xh,X))
+    Xd = np.vstack( (Xd,Xdot))
+    
+plt.figure()
+plt.plot(Xh[:,1])
+#plt.plot(Xh[:,2]*Xh[:,0] + Xd[:,1])
+plt.show()    
+
+
+from scipy.optimize import fsolve
+from scipy.optimize import root
+from scipy.optimize import Bounds
+from scipy.optimize import minimize
+import time
+
+from lapsim import Lapsim
+ls1 = Lapsim(kart,mariembourg)
+
+#start = time.time()
+solution = ls1.apexSolver(0.1)
+#end = time.time()
+#print(end - start)
+solution
+
+ls1.out.psidot * ls1.out.v
+
+"""
+End summary: it is difficult to make the optimizer converge
+With the right scaling etc, it will find smt when neglecting the rigid axle
+when including this it cannot find solutios for high curvature.
+Perhaps lat load transfer will help this
+*Update: tried to include load transfer, still does not work
+
+"""
+solution.x/ls1.scl_x
+
+x0 = np.array([3,0,0,0,0])*ls1.scl_x
+sol0 = root(ls1.conEqApexPre, x0, method='broyden1',tol=1e-2)
+sol0
+x0 = sol0.x
+bnds = Bounds( [1,0,0,0,0.01]*ls1.scl_x , [ls1.kart.vmax,3,3,0.3,1]*ls1.scl_x)
+con2 = {'type': 'eq', 'fun': ls1.conEqApex}
+cons = con2
+opts = {'maxiter': 1000}
+solution = minimize(ls1.objApex ,x0,method='SLSQP',\
+                    bounds=bnds,constraints=cons,options=opts)   
+solution
+
+
+deltaneutral = 1.05*0.2  # l * c
+
+ls1.out.curv = 0.05
+x0 = np.array([8,0,0,0,0])
+
+sol = root(ls1.conEqApex, x0, method='broyden1',tol=1e-2)
+sol
+
+
+x=solution.x
+
+ls1.out.curv = 0.05
+
+ls1.objApex(x)
+ls1.conEqApex(x)
+ls1.conIneqApex(x)
+
+#Improve scaling, and make sure initial solution is not too wrong!
+
+fxmax = ls1.calcFxPT(x[4]/ls1.scl_x[4] /ls1.kart.rw) 
+
+ls1.out.delta*ls1.out.v/ls1.kart.l
+ls1.out.psidot
+
+
+
+
+sx=np.linspace(0,0.5,1000)
+sy=0
+Fz=300
+
+C=1
+
+fx = np.tanh(sx/0.05)-0.2*sx
+plt.figure()
+plt.plot(sx,fx)
+plt.show()
+
+
+fx,fy = ls1.CalcTire_TMeasy(sx, sy, Fz)
+
+difffx = np.diff(np.diff(fx))
+
+
+plt.plot(difffx)
+plt.show()
+
+
+
 mbkz = Track('mariembourg_kz.csv') #lap for comparison (kz)
 
 ls1 = Lapsim(kart,mariembourg)
 ls1.calcapexes()
 ls1.calcfwdbwd()
+
+
 
 s  = shiftdist(mbkz.s,260,13.1/14)
 

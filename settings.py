@@ -4,5 +4,7 @@ Created on Wed Apr  3 15:46:02 2019
 
 @author: Sven van Koutrik
 """
+import numpy as np
 
 g=9.81
+eps = np.finfo(float).eps
