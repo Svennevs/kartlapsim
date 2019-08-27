@@ -1,6 +1,8 @@
 # Go-kart lap time simulation
 This repo contains a simple lap time simulation algorithm, applied to go-karts.
 
+<img src="data/example1result.png"/>
+
 ## Method
 It's a quasi-steady-state method, vehicle model is reduced to a point-mass. Lateral acceleration limit is determined by tyre friction.
 Longitudinal acceleration limit is determined by weight distribution, brake config (4 wheels or rear wheels) and tyre friction.
