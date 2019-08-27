@@ -1,19 +1,19 @@
-"Format","AIM CSV File"
-"Venue","Mariembourg"
-"Vehicle","None"
-"User","Rene"
-"Data Source","AIM Data Logger"
-"Comment",""
-"Date","03/31/19"
-"Time","12:29:53"
-"Sample Rate","10"
-"Duration","62.725"
-"Segment","Lap 5 - 1:02.725"
+"Format,""AIM CSV File"""
+"Venue,""Mariembourg"""
+"Vehicle,""None"""
+"User,""Rene"""
+"Data Source,""AIM Data Logger"""
+"Comment,"""""
+"Date,""03/31/19"""
+"Time,""12:29:53"""
+"Sample Rate,""10"""
+"Duration,""62.725"""
+"Segment,""Lap 5 - 1:02.725"""
 
-"Time","Distance","RPM","GPS_Speed","GPS_LatAcc","GPS_LonAcc","GPS_Slope","GPS_Heading","GPS_Gyro","GPS_Altitude",
-"Time","Distance","RPM","GPS_Speed","GPS_LatAcc","GPS_LonAcc","GPS_Slope","GPS_Heading","GPS_Gyro","GPS_Altitude",
-"sec","km","rpm","km/h","g","g","deg","deg","deg/s","m",
-"","","1","2","3","4","5","6","7","8",
+"Time,""Distance"",""RPM"",""GPS_Speed"",""GPS_LatAcc"",""GPS_LonAcc"",""GPS_Slope"",""GPS_Heading"",""GPS_Gyro"",""GPS_Altitude"","
+"Time,""Distance"",""RPM"",""GPS_Speed"",""GPS_LatAcc"",""GPS_LonAcc"",""GPS_Slope"",""GPS_Heading"",""GPS_Gyro"",""GPS_Altitude"","
+"sec,""km"",""rpm"",""km/h"",""g"",""g"",""deg"",""deg"",""deg/s"",""m"","
+","""",""1"",""2"",""3"",""4"",""5"",""6"",""7"",""8"","
 
 0.000,0.000,13910.491211,97.252007,0.022153,0.052770,0.583133,85.922073,0.389059,161.065582
 0.100,0.003,13943.317383,97.426003,0.039055,0.043172,0.575914,86.001831,0.818548,161.090790
@@ -643,4 +643,4 @@
 62.500,1.301,13725.250977,95.852005,0.062407,0.049023,0.660826,85.639038,1.273706,160.975616
 62.600,1.304,13747.210938,96.026001,0.082878,0.044919,0.686495,85.782051,1.783409,160.991760
 62.700,1.307,13766.729492,96.152000,0.076147,0.046295,0.691766,85.896187,1.637649,161.024933
-62.725,1.307,13769.564453,96.202003,0.067862,0.048526,0.684604,85.916237,1.448573,161.033432
+62.725,1.310,13769.564453,96.202003,0.067862,0.048526,0.684604,85.916237,1.448573,161.033432

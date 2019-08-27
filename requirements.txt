@@ -1,0 +1,9 @@
+---Tested for python 3.6 (should work above)---
+
+---Packages:---
+matplotlib
+numpy
+math
+pickle (or cPickle for Python 2)
+scipy (specifically for scipy.optimize)
+itertools

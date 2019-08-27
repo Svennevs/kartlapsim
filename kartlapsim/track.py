@@ -6,7 +6,7 @@ Created on Wed Apr  3 11:56:46 2019
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import settings
+import kartlapsim.utils.constants as constants
 
 class Track:
     def __init__(self, filenm=str()):
@@ -29,14 +29,13 @@ class Track:
         vcol    = [i for i,s in enumerate(chans) if ("GPS_Speed" in s or "Snelheid" in s)]
         dpsicol = [i for i,s in enumerate(chans) if "GPS_Gyro" in s]
         inclcol = [i for i,s in enumerate(chans) if "GPS_Slope" in s]
-        rpmcol  = [i for i,s in enumerate(chans) if "RPM" in s]
+        rpmcol  = [i for i,s in enumerate(chans) if ("RPM" in s or "Toeren" in s)]
         
         self.s      = datarray[:,scol]*1000
         self.v      = datarray[:,vcol]/3.6
-        dpsi        = np.deg2rad(datarray[:,dpsicol])
-        self.curv   = dpsi/self.v
+        self.curv   = np.deg2rad(datarray[:,dpsicol])/self.v
         self.ds     = np.gradient(self.s,axis=0)
-        self.axIncl = np.sin( np.radians(-datarray[:,inclcol]))*settings.g
+        self.axIncl = np.sin( np.radians(-datarray[:,inclcol]))*constants.g
         self.rpm    = datarray[:,rpmcol]
         #self.azIncl = self.v**2*np.gradient(np.sin(np.radians(datarray[:,inclcol])),axis=0)
  
