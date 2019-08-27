@@ -29,7 +29,7 @@ class Track:
         vcol    = [i for i,s in enumerate(chans) if ("GPS_Speed" in s or "Snelheid" in s)]
         dpsicol = [i for i,s in enumerate(chans) if "GPS_Gyro" in s]
         inclcol = [i for i,s in enumerate(chans) if "GPS_Slope" in s]
-        rpmcol  = [i for i,s in enumerate(chans) if ("RPM" in s or "Toeren" in s)]
+        rpmcol  = [i for i,s in enumerate(chans) if "RPM" in s]
         
         self.s      = datarray[:,scol]*1000
         self.v      = datarray[:,vcol]/3.6
