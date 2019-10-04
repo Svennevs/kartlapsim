@@ -4,7 +4,7 @@ This repo contains a simple lap time simulation algorithm, applied to go-karts.
 <img src="data/example1result.png"/>
 
 ## Method
-It's a quasi-steady-state method, vehicle model is reduced to a point-mass. Lateral acceleration limit is determined by tyre friction.
+It's a quasi-steady-state method, vehicle model is a point-mass. Lateral acceleration limit is determined by tyre friction.
 Longitudinal acceleration limit is determined by weight distribution, brake config (4 wheels or rear wheels) and tyre friction.
 Combined acceleration limit determined by an ellipse, defined by long and lat acc limits. Other model features:
 * Apex definition: intersection of ax for max ay with gradient of v for max ay.
