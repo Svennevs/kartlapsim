@@ -16,7 +16,7 @@ from kartlapsim.track import Track
 from kartlapsim.lapsim import Lapsim
 from kartlapsim.kart import Kart
 
-track = Track('..trackMariembourgMini.csv')
+track = Track('./data/trackMariembourgMini.csv')
 
 transoptions = np.array([65,66,67,68,69,70,71,72,73])/10
 optsplt = ['10/65','10/66','10/67','10/68','10/69','10/70','10/71','10/72','10/73']
@@ -26,7 +26,7 @@ ts=np.zeros_like(lt)
 maxrpm=np.zeros_like(lt)
 minrpm=np.zeros_like(lt)
    
-kart = load_object('../data/kartMini.pickle')
+kart = load_object('./data/kartMini.pickle')
 
 plt.figure()
 for i,tr in enumerate(transoptions):
